@@ -56,12 +56,17 @@ const Maker = ({authService}) => {
           };
         });
     });
+//card라는 object를 함수 내에서 만드는 것이 아닌 card_add_form에서 만들어서 card라는 object를 파라미터로 받는다<div className=""></div>
+    const onAdd = (card) => {
+        const updated = [...cards, card];
+        setCards(updated);
+    }
 
     return(
         <section className={styles.maker}>
             <Header onLogout={onLogout}/>
             <div className={styles.container}>
-                <Editor cards={cards}/>
+                <Editor cards={cards} onAdd={onAdd}/>
                 <Preview cards={cards}/>
             </div>
             <Footer />
