@@ -1,8 +1,9 @@
-@value makerGreen from '../../common/colors.css';
+@value makerWhite, makerGreen from '../../common/colors.css';
 
 .preview {
   flex-basis: 50%;
   overflow-y: auto;
+  background-color: makerWhite;
 }
 .cards {
   width: 100%;

@@ -27,7 +27,7 @@ const Maker = ({FileInput, authService, cardRepository}) => {
         });
     //component가 unmount되었을 때 자동으로 호출된다
         return () => stopSync();
-    },[userId]);
+    },[userId, cardRepository]);
 
     useEffect(()=>{
         authService.onAuthChanged(user => {
@@ -37,7 +37,7 @@ const Maker = ({FileInput, authService, cardRepository}) => {
             history.push('/');
           };
         });
-    });
+    },[authService,history]);
 //card라는 object를 함수 내에서 만드는 것이 아닌 card_add_form에서 만들어서 card라는 object를 파라미터로 받는다<div className=""></div>
 
     const createOrUpdateCard = (card) => {
