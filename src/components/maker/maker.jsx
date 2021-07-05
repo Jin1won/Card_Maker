@@ -6,52 +6,34 @@ import Header from '../header/header';
 import Preview from '../preview/preview';
 import Editor from '../editor/editor';
 
-const Maker = ({FileInput, authService}) => {
+const Maker = ({FileInput, authService, cardRepository}) => {
 //class로 react 쓸 때 state에 object 넣었던 것 처럼 useState안에도 넣을 수 있다.
-    const [cards, setCards] = useState({
-        1: {
-            id: '1',
-            name: 'Jin1',
-            company: 'Seoultech',
-            theme: 'dark',
-            title: 'Front-end Developer',
-            email: 'wlsdnjs16521@gmail.com',
-            message: 'go for it',
-            fileName: 'jinwon',
-            fileURL: null,
-        },
-        2: {
-            id: '2',
-            name: 'Jin2',
-            company: 'Seoultech',
-            theme: 'light',
-            title: 'Front-end Developer',
-            email: 'wlsdnjs16521@gmail.com',
-            message: 'go for it',
-            fileName: 'jinwon',
-            fileURL: null,
-        },
-        3: {
-            id: '3',
-            name: 'Jin3',
-            company: 'Seoultech',
-            theme: 'colorful',
-            title: 'Front-end Developer',
-            email: 'wlsdnjs16521@gmail.com',
-            message: 'go for it',
-            fileName: 'jinwon',
-            fileURL: null,
-        }
-    });
-
+    const [cards, setCards] = useState({});
     const history = useHistory();
+    //다른 화면에서 왔다면 history의 state가 있을 것이다.
+    const historyState = history?.location?.state;
+    const [userId, setUserId] = useState(historyState && historyState.id);
+
     const onLogout = () => {
         authService.logout();
     }
     
     useEffect(()=>{
+        if(!userId){
+            return;
+        }
+        const stopSync = cardRepository.syncCards(userId, cards => {
+            setCards(cards);
+        });
+    //component가 unmount되었을 때 자동으로 호출된다
+        return () => stopSync();
+    },[userId]);
+
+    useEffect(()=>{
         authService.onAuthChanged(user => {
-          if(!user){
+          if(user){
+            setUserId(user.uid);
+          } else{
             history.push('/');
           };
         });
@@ -64,6 +46,7 @@ const Maker = ({FileInput, authService}) => {
             updated[card.id] = card;
             return updated;
         });
+        cardRepository.saveCard(userId, card);
     }
 
     const onDelete = (card) => {
@@ -72,11 +55,14 @@ const Maker = ({FileInput, authService}) => {
             delete updated[card.id];
             return updated;
         });
+        cardRepository.removeCard(userId, card);
     }
 
     return(
         <section className={styles.maker}>
-            <Header onLogout={onLogout}/>
+            <div className={styles.header}>
+                <Header onLogout={onLogout}/>
+            </div>
             <div className={styles.container}>
                 <Editor FileInput={FileInput} cards={cards} onAdd={createOrUpdateCard} updateCard={createOrUpdateCard} onDelete={onDelete}/>
                 <Preview cards={cards}/>
