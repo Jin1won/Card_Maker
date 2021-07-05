@@ -6,7 +6,7 @@ import Header from '../header/header';
 import Preview from '../preview/preview';
 import Editor from '../editor/editor';
 
-const Maker = ({authService}) => {
+const Maker = ({FileInput, authService}) => {
 //class로 react 쓸 때 state에 object 넣었던 것 처럼 useState안에도 넣을 수 있다.
     const [cards, setCards] = useState({
         1: {
@@ -78,7 +78,7 @@ const Maker = ({authService}) => {
         <section className={styles.maker}>
             <Header onLogout={onLogout}/>
             <div className={styles.container}>
-                <Editor cards={cards} onAdd={createOrUpdateCard} updateCard={createOrUpdateCard} onDelete={onDelete}/>
+                <Editor FileInput={FileInput} cards={cards} onAdd={createOrUpdateCard} updateCard={createOrUpdateCard} onDelete={onDelete}/>
                 <Preview cards={cards}/>
             </div>
             <Footer />

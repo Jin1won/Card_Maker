@@ -17,7 +17,7 @@
   font-size: 0.8rem;
   width: 100%;
   border: 0;
-  padding: 0.5rem;
+  padding: 0.5em;
   border-bottom: 1px solid makerBlack;
   border-right: 1px solid makerBlack;
   background: makerWhite;
@@ -29,8 +29,10 @@
 }
 
 .fileInput {
+  padding: 0;
   flex: 1 1 50%;
 }
+
 .input:focus,
 .textarea:focus,
 .select:focus,
@@ -39,5 +41,5 @@
 }
 
 .textarea {
-  text-basis: 100%;
+  flex-basis: 100%;
 }
