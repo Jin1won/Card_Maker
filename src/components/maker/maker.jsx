@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import { useHistory } from 'react-router-dom';
 import styles from './maker.module.css';
 import Footer from '../footer/footer';
@@ -13,10 +13,12 @@ const Maker = ({FileInput, authService, cardRepository}) => {
     //다른 화면에서 왔다면 history의 state가 있을 것이다.
     const historyState = history?.location?.state;
     const [userId, setUserId] = useState(historyState && historyState.id);
-
-    const onLogout = () => {
+    //render가 될 때 마다 onLogout함수가 새로 만들어지기 때문에 계속 새로운 함수가 전달되서 header에 memo를 써도 render가 일어난다 
+    //따라서, 함수가 계속 호출 되어도 동일한 데이터를 쓰기 위해(동일한 함수를 쓰기 위해) useCallback을 사용한다
+    //하지만, authService가 기존 값이 사용될 수 있기 때문이 authService가 업데이트 되면 새로운 함수를 만들도록 설정해준다.
+    const onLogout = useCallback(() => {
         authService.logout();
-    }
+    },[authService]);
     
     useEffect(()=>{
         if(!userId){
